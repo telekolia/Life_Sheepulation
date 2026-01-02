@@ -1,0 +1,27 @@
+{
+    "id": "none",
+    "type": "sheep",
+    "Position": {"x": 0, "y": 0},
+    "Renderable": {
+        "texture_name": "sheep",
+        "layer": 2
+    },
+    "Health": {
+        "current_hp": 80,
+        "max_hp": 80,
+        "death_texture_name": "dead_sheep",
+        "is_alive": true
+    },
+    "Hunger": {
+        "current_satiety": 50,
+        "max_satiety": 50
+    },
+    "Animal": {
+        "type": "herbivore",
+        "max_amount_of_children": 1,
+                        "adult_texture_name": "sheep",
+                        "baby_texture_name": "baby_sheep"
+                        },
+    "state": "chill",
+    "target_id": "nope"
+}

@@ -1,0 +1,14 @@
+{
+        "id": "none",
+        "type": "bush",
+        "Position": {"x": 0, "y": 0},
+        "Renderable": {
+            "texture_name": "bush",
+            "layer": 1
+        },
+        "Plant": {
+            "growth_time": 40,
+            "growth_stage_texture_names": ["bush", "berry_bush"],
+            "is_masture": false
+        }
+}
