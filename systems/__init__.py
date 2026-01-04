@@ -1,5 +1,5 @@
 from systems.render import RenderSystem, Renderable
-from systems.growth import GrowthSystem, Plant
+from systems.plant import GrowthSystem, Plant
 from systems.health import HealthSystem, Health
 from systems.hunger import HungerSystem, Hunger
 from systems.animal import AnimalSystem, Animal
