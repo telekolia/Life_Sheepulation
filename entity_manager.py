@@ -1,5 +1,5 @@
 import json
-from components import Position, Renderable, Health, Plant, Hunger, Animal
+from systems.__init__ import *
 from pathlib import Path
 import random
 

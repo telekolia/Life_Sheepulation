@@ -1,3 +1,8 @@
+class Hunger():
+    def __init__(self, current_satiety, max_satiety):
+        self.current_satiety = current_satiety
+        self.max_satiety = max_satiety
+
 class HungerSystem():
     @staticmethod
     def update(entities):

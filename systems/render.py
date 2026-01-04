@@ -1,6 +1,11 @@
 import pygame
 from textures import TextureManager
 
+class Renderable():
+    def __init__(self, texture_name, layer = 0):
+        self.texture_name = texture_name
+        self.layer = layer
+
 class RenderSystem():
     @staticmethod
     def draw(window, entities, texture_manager):

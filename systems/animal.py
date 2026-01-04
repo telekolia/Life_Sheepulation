@@ -1,6 +1,13 @@
 import random
 from math import sqrt
 
+class Animal():
+    def __init__(self, type, max_amount_of_children, adult_texture_name, baby_texture_name):
+        self.type = type
+        self.max_amount_of_children = max_amount_of_children
+        self.adult_texture_name = adult_texture_name
+        self.baby_texture_name = baby_texture_name
+
 class AnimalSystem():
     targets = {}
 

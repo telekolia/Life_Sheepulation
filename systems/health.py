@@ -1,3 +1,10 @@
+class Health():
+    def __init__(self, current_hp, max_hp, death_texture_name, is_alive = True):
+        self.current_hp = current_hp
+        self.max_hp = max_hp
+        self.is_alive = is_alive
+        self.death_texture_name = death_texture_name
+
 class HealthSystem():
     @staticmethod
     def update(entities):

@@ -1,5 +1,12 @@
 import random
 
+class Plant():
+    def __init__(self, growrh_time, growth_stage_texture_names, is_mature=False):
+        self.is_mature = is_mature
+        self.growth_stage = 0
+        self.growth_time = growrh_time
+        self.growth_stage_texture_names = [row[:] for row in growth_stage_texture_names]
+
 class GrowthSystem:
     @staticmethod
     def update(entities):
