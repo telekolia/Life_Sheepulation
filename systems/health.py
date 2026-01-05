@@ -1,4 +1,6 @@
-class Health():
+from systems.component_class import Component
+
+class Health(Component):
     def __init__(self, current_hp, max_hp, death_texture_name, is_alive = True):
         self.current_hp = current_hp
         self.max_hp = max_hp

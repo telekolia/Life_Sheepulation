@@ -32,34 +32,28 @@ class EntityManager():
     @staticmethod
     def _execute_entity_from_json(entity_data):
         entity = {}
-
+        
         if "id" in entity_data:
             entity['id'] = entity_data['id']
         if "type" in entity_data:
             entity['type'] = entity_data['type']
-        if "Position" in entity_data:
-            pos = entity_data['Position']
-            entity['Position'] = Position(pos['x'], pos['y'])
-        if "Renderable" in entity_data:
-            renderable = entity_data['Renderable']
-            entity['Renderable'] = Renderable(renderable['texture_name'], renderable['layer'])
-        if "Health" in entity_data:
-            health = entity_data['Health']
-            entity['Health'] = Health(health['current_hp'], health['max_hp'], health['death_texture_name'])
-        if "Plant" in entity_data:
-            plant = entity_data['Plant']
-            entity['Plant'] = Plant(plant['growth_time'], plant['growth_stage_texture_names'])
-        if "Hunger" in entity_data:
-            hunger = entity_data['Hunger']
-            entity['Hunger'] = Hunger(hunger['current_satiety'], hunger['max_satiety'])
-        if "Animal" in entity_data:
-            animal = entity_data['Animal']
-            entity['Animal'] = Animal(animal['type'], animal['max_amount_of_children'],
-                                      animal['adult_texture_name'], animal['baby_texture_name'])
         if "target_id" in entity_data:
             entity['target_id'] = entity_data['target_id']
         if "state" in entity_data:
             entity['state'] = entity_data['state']
+        
+        if "Position" in entity_data:
+            entity['Position'] = Position.from_dict(entity_data['Position'])
+        if "Renderable" in entity_data:
+            entity['Renderable'] = Renderable.from_dict(entity_data['Renderable'])
+        if "Health" in entity_data:
+            entity['Health'] = Health.from_dict(entity_data['Health'])
+        if "Plant" in entity_data:
+            entity['Plant'] = Plant.from_dict(entity_data['Plant'])
+        if "Hunger" in entity_data:
+            entity['Hunger'] = Hunger.from_dict(entity_data['Hunger'])
+        if "Animal" in entity_data:
+            entity['Animal'] = Animal.from_dict(entity_data['Animal'])
 
         return entity
 
@@ -118,25 +112,18 @@ class EntityManager():
             entity['Position'] = Position(x, y)
 
         if 'Renderable' in template:
-            render_data = template['Renderable']
-            entity['Renderable'] = Renderable(render_data.texture_name, render_data.layer)
+            entity['Renderable'] = Renderable.clone(template['Renderable'])
 
         if 'Health' in template:
-            health_data = template['Health']
-            entity['Health'] = Health(health_data.current_hp, health_data.max_hp,
-                                      health_data.death_texture_name, health_data.is_alive)
+            entity['Health'] = Health.clone(template['Health'])
 
         if 'Hunger' in template:
-            hunger_data = template['Hunger']
-            entity['Hunger'] = Hunger(hunger_data.current_satiety, hunger_data.max_satiety)
+            entity['Hunger'] = Hunger.clone(template['Hunger'])
 
         if 'Plant' in template:
-            plant_data = template['Plant']
-            entity['Plant'] = Plant(plant_data.growth_time, plant_data.growth_stage_texture_names, plant_data.is_mature)
+            entity['Plant'] = Plant.clone(template['Plant'])
 
         if 'Animal' in template:
-            animal_data = template['Animal']
-            entity['Animal'] = Animal(animal_data.type, animal_data.max_amount_of_children,
-                                      animal_data.adult_texture_name, animal_data.baby_texture_name)
+            entity['Animal'] = Animal.clone(template['Animal'])
 
         return entity

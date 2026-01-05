@@ -1,7 +1,9 @@
+from systems.component_class import Component
+
 import pygame
 from textures import TextureManager
 
-class Renderable():
+class Renderable(Component):
     def __init__(self, texture_name, layer = 0):
         self.texture_name = texture_name
         self.layer = layer

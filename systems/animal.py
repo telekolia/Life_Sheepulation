@@ -1,7 +1,9 @@
+from systems.component_class import Component
+
 import random
 from math import sqrt
 
-class Animal():
+class Animal(Component):
     def __init__(self, type, max_amount_of_children, adult_texture_name, baby_texture_name):
         self.type = type
         self.max_amount_of_children = max_amount_of_children
