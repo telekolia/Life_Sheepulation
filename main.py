@@ -5,6 +5,11 @@ from interface.hud import HUD
 from entity_manager import EntityManager
 from tile import Tile
 
+# import json
+# from pathlib import Path
+# TO DO: реализовать конфиг для быстрого и удобного создания карты и кол-ва и типов мобов для спавна
+#        или же... реализовать спавн кликом мышки, как и изменение карты
+
 map_size = 15
 
 pygame.init()
