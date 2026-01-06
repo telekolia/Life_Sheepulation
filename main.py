@@ -25,27 +25,14 @@ clock = pygame.time.Clock()
 turn_timer = 0
 turn_delay = 0.5  # секунд между ходами
 
-texture_manager = TextureManager()
-texture_manager.load_directory('res')
+TextureManager.load_directory('res')
 
-pygame.display.set_icon(texture_manager.get("sheep"))
+EntityManager.load_directory("entities")
 
-default_map = [[Tile("g") for i in range(map_size)] for j in range(map_size)]
-for x in range(5, 7):
-    for y in range(7, 9):
-        default_map[x][y] = Tile("w")
-for i in range(1, 9):
-    default_map[1][i] = Tile("w")
-    default_map[i][1] = Tile("w")
+pygame.display.set_icon(TextureManager.get("sheep"))
 
-default_entities = []
-entity_manager = EntityManager()
-entity_manager.load_directory("entities")
-entity_manager.batch_spawn(default_entities, default_map, "bush", 15)
-entity_manager.batch_spawn(default_entities, default_map, "sheep", 20)
-
-world = World(default_entities, default_map)
-world.cout()
+World()
+World.cout()
 
 running = True
 while running:
@@ -73,19 +60,19 @@ while running:
     # Update
     turn_timer += dt
     if turn_timer >= turn_delay:
-        world.update()
+        EntityManager.update(World.map)
         turn_timer = 0
 
     # Render
-    world.draw(window, texture_manager)
+    World.draw(window)
 
     # 2. Рисуем HUD поверх сущностей
     if show_hud:
-        hud.draw(window, world.entities)
+        hud.draw(window, EntityManager.entities)
 
     # 3. Рисуем статистику в углу
     if show_stats:
-        hud.draw_stats(window, world.entities, 10, 10)
+        hud.draw_stats(window, EntityManager.entities, 10, 10)
 
     pygame.display.update()
 

@@ -19,7 +19,7 @@ class Position(Component):
         if not map[x][y].passable:
             return False
 
-        for other in entities:
+        for other in entities.values():
             if 'Position' in other:
                 if (other['Position'].x == x and other['Position'].y == y and 'Plant' not in other):
                     return False

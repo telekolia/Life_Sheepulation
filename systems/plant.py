@@ -13,7 +13,7 @@ class Plant(Component):
 class GrowthSystem:
     @staticmethod
     def update(entities):
-        for entity in entities:
+        for entity in entities.values():
             if 'Plant' in entity:
                 id = entity['id']
                 renderable = entity['Renderable']

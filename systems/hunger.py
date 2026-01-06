@@ -8,7 +8,7 @@ class Hunger(Component):
 class HungerSystem():
     @staticmethod
     def update(entities):
-        for entity in entities:
+        for entity in entities.values():
             if 'Hunger' in entity:
                 hunger = entity['Hunger']
                 if hunger.current_satiety > 0.0:

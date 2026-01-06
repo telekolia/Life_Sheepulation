@@ -1,5 +1,6 @@
 from systems.component_class import Component
 from systems.behaviors.herbiovore import Herbiovore
+from systems.behaviors.scavenger import Scavenger
 
 import random
 from math import sqrt
@@ -17,10 +18,12 @@ class AnimalSystem():
 
     @staticmethod
     def update(entities, map):
-        for entity in entities:
+        for entity in entities.values():
             if 'Animal' in entity and 'Hunger' in entity and 'Health' in entity:
                 animal = entity['Animal']
                 if animal.type == "herbivore":
-                    Herbiovore._update_herbivore(entity, entities, map)
+                    Herbiovore.update(entity, entities, map)
+                elif animal.type == "scavenger":
+                    Scavenger.update(entity, entities, map)
                 # elif animal.type == "predator":
-                #     AnimalSystem._update_predator(entity, entities, map)
+                #   Predator._update(entity, entities, map)

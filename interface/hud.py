@@ -22,7 +22,7 @@ class HUD():
         self.anim_values = {}  # entity_id -> текущее анимированное значение
 
     def draw(self, surface, entities):
-        for entity in entities:
+        for entity in entities.values():
             self._draw_entity_hud(surface, entity)
 
     def _draw_entity_hud(self, surface, entity):

@@ -7,9 +7,9 @@ class TileTextures():
 
 
 class TextureManager:
-    def __init__(self):
-        self.textures = {}
+    textures = {}
 
+    @classmethod
     def load_directory(self, directory_path, recursive = True):
         path = Path(directory_path)
 
@@ -22,10 +22,11 @@ class TextureManager:
             texture_name = file_path.stem
             try:
                 texture = pygame.image.load(str(file_path))
-                self.textures[texture_name] = texture
+                TextureManager.textures[texture_name] = texture
                 print(f"Loaded texture: {texture_name}")
             except Exception as e:
                 print(f"Failed to load {file_path}: {e}")
 
+    @classmethod
     def get(self, texture_name):
-        return self.textures.get(texture_name)
+        return TextureManager.textures[texture_name]

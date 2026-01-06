@@ -1,0 +1,27 @@
+{
+    "id": "none",
+    "type": "hyena",
+    "Position": {"x": 0, "y": 0},
+    "Renderable": {
+        "texture_name": "hyena",
+        "layer": 2
+    },
+    "Health": {
+        "current_hp": 20,
+        "max_hp": 20,
+        "death_texture_name": "hyena",
+        "is_alive": true
+    },
+    "Hunger": {
+        "current_satiety": 120,
+        "max_satiety": 120
+    },
+    "Animal": {
+        "type": "scavenger",
+        "max_amount_of_children": 1,
+                        "adult_texture_name": "hyena",
+                        "baby_texture_name": "hyena"
+    },
+    "state": "chill",
+    "target_id": "nope"
+}

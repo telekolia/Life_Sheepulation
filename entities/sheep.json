@@ -21,7 +21,7 @@
         "max_amount_of_children": 1,
                         "adult_texture_name": "sheep",
                         "baby_texture_name": "baby_sheep"
-                        },
+    },
     "state": "chill",
     "target_id": "nope"
 }
