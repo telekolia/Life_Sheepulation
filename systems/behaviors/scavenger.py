@@ -1,5 +1,6 @@
 from systems.position import Position
 import random
+# from entity_manager import EntityManager
 
 class Scavenger:
     targets = {}
@@ -82,9 +83,10 @@ class Scavenger:
     @staticmethod
     def _eat_food(entity, food_pos, entities):
         for corpse in entities.values():
-            if ('Health' in corpse and not corpse['Health'].is_alive and
+            if ('Health' in corpse and not corpse['Health'].is_alive and corpse['id'] != 0,
                 corpse and 'Position' in corpse and corpse['Position'].x == food_pos.x and corpse['Position'].y == food_pos.y):
                 hunger = entity['Hunger']
                 hunger.current_satiety = min(hunger.max_satiety, hunger.current_satiety + 20)
-                del entities[corpse['id']]
+                corpse['id'] = 0
+                # EntityManager.delete_this_entity(corpse)
                 break

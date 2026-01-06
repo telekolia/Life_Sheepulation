@@ -10,29 +10,28 @@ from tile import Tile
 # TO DO: реализовать конфиг для быстрого и удобного создания карты и кол-ва и типов мобов для спавна
 #        или же... реализовать спавн кликом мышки, как и изменение карты
 
-map_size = 15
+World()
+map_size = len(World.map)
+
+hud = HUD(64)
+show_stats = False
+show_hud = False
+
+TextureManager.load_directory('res')
+
+EntityManager.load_directory("entities")
+EntityManager.generate_default_entities(World.map)
 
 pygame.init()
 
 window = pygame.display.set_mode((map_size * 64, map_size * 64))
 pygame.display.set_caption("Симуляция жизни")
 
-hud = HUD(64)
-show_stats = False
-show_hud = False
+pygame.display.set_icon(TextureManager.get("sheep"))
 
 clock = pygame.time.Clock()
 turn_timer = 0
 turn_delay = 0.5  # секунд между ходами
-
-TextureManager.load_directory('res')
-
-EntityManager.load_directory("entities")
-
-pygame.display.set_icon(TextureManager.get("sheep"))
-
-World()
-World.cout()
 
 running = True
 while running:

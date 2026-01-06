@@ -9,15 +9,8 @@ class World():
     @classmethod
     def __init__(self):
         World.generate_default_map()
-        World.generate_default_entities()
         
         print(f"Мир с {len(EntityManager.entities)} сушествами")
-
-    @classmethod
-    def generate_default_entities(self):
-        EntityManager.batch_spawn(World.map, "bush", 2)
-        EntityManager.batch_spawn(World.map, "sheep", 6)
-        EntityManager.batch_spawn(World.map, "hyena", 1)
 
     @classmethod
     def generate_default_map(self):

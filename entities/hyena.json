@@ -9,7 +9,7 @@
     "Health": {
         "current_hp": 20,
         "max_hp": 20,
-        "death_texture_name": "hyena",
+        "death_texture_name": "dead_hyena",
         "is_alive": true
     },
     "Hunger": {

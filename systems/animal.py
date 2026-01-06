@@ -20,10 +20,11 @@ class AnimalSystem():
     def update(entities, map):
         for entity in entities.values():
             if 'Animal' in entity and 'Hunger' in entity and 'Health' in entity:
-                animal = entity['Animal']
-                if animal.type == "herbivore":
-                    Herbiovore.update(entity, entities, map)
-                elif animal.type == "scavenger":
-                    Scavenger.update(entity, entities, map)
+                if entity['Health'].is_alive:
+                    animal = entity['Animal']
+                    if animal.type == "herbivore":
+                        Herbiovore.update(entity, entities, map)
+                    elif animal.type == "scavenger":
+                        Scavenger.update(entity, entities, map)
                 # elif animal.type == "predator":
                 #   Predator._update(entity, entities, map)

@@ -34,13 +34,13 @@ class HUD():
         screen_y = pos.y * self.tile_size
 
         # Для овец
-        if entity.get('type') == 'sheep':
-            self._draw_sheep_hud(surface, entity, screen_x, screen_y)
+        if entity.get('type') in ['sheep', 'baby_sheep', 'hyena']:
+            self._draw_animal_hud(surface, entity, screen_x, screen_y)
         # Для кустов
         elif 'Plant' in entity:
             self._draw_plant_hud(surface, entity, screen_x, screen_y)
 
-    def _draw_sheep_hud(self, surface, entity, x, y):
+    def _draw_animal_hud(self, surface, entity, x, y):
         entity_id = id(entity)
 
         if 'state' in entity:

@@ -9,6 +9,12 @@ class EntityManager():
     entities = {}
 
     @classmethod
+    def generate_default_entities(self, map):
+        # EntityManager.batch_spawn(map, "bush", 2)
+        EntityManager.batch_spawn(map, "sheep", 1)
+        EntityManager.batch_spawn(map, "hyena", 40)
+
+    @classmethod
     def load_directory(self, directory_path, recursive = True):
         path = Path(directory_path)
 
@@ -36,6 +42,25 @@ class EntityManager():
         HungerSystem.update(EntityManager.entities)
         AnimalSystem.update(EntityManager.entities, map)
         GrowthSystem.update(EntityManager.entities)
+        EntityManager._delete_destroed_entities()
+
+    @staticmethod
+    def is_entity_deleted(entity):
+        return entity['id'] == 0
+    
+    @staticmethod
+    def delete_this_entity(entity):
+        entity['id'] = 0
+
+    @classmethod
+    def _delete_destroed_entities(self):
+        destroed_entity_ids = []
+        for id, entity in EntityManager.entities.items():
+            if entity['id'] == 0:
+                destroed_entity_ids.append(id)
+
+        for id in destroed_entity_ids:
+            del EntityManager.entities[id]
 
     @classmethod
     def draw(self, window):
