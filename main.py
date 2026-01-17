@@ -2,25 +2,26 @@ import pygame
 from world import World
 from textures import TextureManager
 from interface.hud import HUD
-from entity_manager import EntityManager
-from tile import Tile
+from entity_manager import EntityManager, EntityLoader
 
 # import json
 # from pathlib import Path
 # TO DO: реализовать конфиг для быстрого и удобного создания карты и кол-ва и типов мобов для спавна
 #        или же... реализовать спавн кликом мышки, как и изменение карты
+entity_manager = EntityManager()
+TextureManager.load_directory('res')
+EntityLoader.load_directory(entity_manager.entity_types, "entities")
 
-World()
-map_size = len(World.map)
+world = World(entity_manager)
+world.cout()
+map_size = len(world.map)
+
+entity_manager.set_map(world.map)
+entity_manager.generate_default_entities()
 
 hud = HUD(64)
 show_stats = False
 show_hud = False
-
-TextureManager.load_directory('res')
-
-EntityManager.load_directory("entities")
-EntityManager.generate_default_entities(World.map)
 
 pygame.init()
 
@@ -31,7 +32,7 @@ pygame.display.set_icon(TextureManager.get("sheep"))
 
 clock = pygame.time.Clock()
 turn_timer = 0
-turn_delay = 0.5  # секунд между ходами
+turn_delay = 0.1  # секунд между ходами
 
 running = True
 while running:
@@ -59,19 +60,20 @@ while running:
     # Update
     turn_timer += dt
     if turn_timer >= turn_delay:
-        EntityManager.update(World.map)
+        entity_manager.update()
+        # print(f"Update {turn_timer}")
         turn_timer = 0
 
     # Render
-    World.draw(window)
+    entity_manager.draw(window)
 
     # 2. Рисуем HUD поверх сущностей
     if show_hud:
-        hud.draw(window, EntityManager.entities)
+        hud.draw(window, entity_manager.entities)
 
     # 3. Рисуем статистику в углу
     if show_stats:
-        hud.draw_stats(window, EntityManager.entities, 10, 10)
+        hud.draw_stats(window, entity_manager.entities, 10, 10)
 
     pygame.display.update()
 

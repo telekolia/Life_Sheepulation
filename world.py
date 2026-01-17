@@ -1,40 +1,44 @@
-from tile import Tile
+from systems.tile import Tile
 import copy
 from systems.__init__ import RenderSystem, GrowthSystem, HealthSystem, HungerSystem, AnimalSystem
 from entity_manager import EntityManager
 
 class World():
-    map = []
-
-    @classmethod
-    def __init__(self):
-        World.generate_default_map()
+    def __init__(self, entity_manager):
+        self.map_size = 15
+        self.entity_manager = entity_manager
+        self.entities = entity_manager.entities
+        self.map = [[None for _ in range(self.map_size)] for _ in range(self.map_size)]
+        self.generate_default_map()
         
-        print(f"Мир с {len(EntityManager.entities)} сушествами")
+        print(f"Мир с {len(self.entities)} сушествами")
 
-    @classmethod
     def generate_default_map(self):
-        map_size = 15
-        self.map = [[Tile("g") for i in range(map_size)] for j in range(map_size)]
+        water_positions = []
+
         for x in range(5, 7):
             for y in range(7, 9):
-                self.map[x][y] = Tile("w")
+                water_positions.append((x, y))
         for i in range(1, 9):
-            self.map[1][i] = Tile("w")
-            self.map[i][1] = Tile("w")
+            water_positions.append((1, i))
+            water_positions.append((i, 1))
 
-    @classmethod
-    def draw(self, window):
-        for i in range(len(self.map)):
-            for j in range(len(self.map)):
-                self.map[i][j].draw(window, i*64, j*64)
+        for x in range(self.map_size):
+            for y in range(self.map_size):
+                if (x, y) in water_positions:
+                    self.entity_manager.spawn_entity("water_tile", x, y)
+                else:
+                    self.entity_manager.spawn_entity("grass_tile", x, y)
 
-        EntityManager.draw(window)
-
-    @classmethod
+        for entity in self.entities.values():
+            if "Tile" in entity and "Position" in entity:
+                pos = entity["Position"]
+                self.map[pos.x][pos.y] = entity
+                # print(f"получилось {pos.x},{pos.y}")
+                
     def cout(self):
         print("world map:")
         for y in range(len(self.map)):
             for x in range(len(self.map)):
-                print(self.map[x][y].type, end=" ")
+                print(self.map[x][y]["id"], end=" ")
             print()

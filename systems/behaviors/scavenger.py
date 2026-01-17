@@ -1,10 +1,9 @@
 from systems.position import Position
+from systems.movenent import Movement
 import random
 # from entity_manager import EntityManager
 
 class Scavenger:
-    targets = {}
-
     @staticmethod
     def update(entity, entities, map):
         Scavenger._update_state(entity)
@@ -26,7 +25,7 @@ class Scavenger:
         state = entity['state']
 
         if state == "hungry":
-            Scavenger._run_hungry_behavior(entity,entities, map)
+            Scavenger._run_hungry_behavior(entity, entities, map)
         elif state == "chill":
             Scavenger._run_chill_behavior(entity, entities, map)
 
@@ -34,35 +33,34 @@ class Scavenger:
     def _run_hungry_behavior(self, entity, entities, map):
         pos = entity['Position']
 
-        Scavenger._define_target(entity, entities, map)
+        Scavenger._define_target(entity, entities)
         if entity['target_id'] == "nope":
-            Position._random_move(entity, map, entities)
+            Scavenger._run_chill_behavior(entity, entities, map)
             return
         
-        target_pos = Scavenger.targets[entity['target_id']]
+        target = entities[entity['target_id']]
+        target_pos = target['Position']
 
         if Position._distance(pos, target_pos) <= 1:
             Scavenger._eat_food(entity, target_pos, entities)
-            del Scavenger.targets[entity['target_id']]
         else:
-            Position._move_towards(entity, entities, target_pos, map)
+            Movement._move_towards(entity, entities, target_pos, map)
             
 
     @staticmethod
     def _run_chill_behavior(entity, entities, map):
         if random.random() < 0.3:
-            Position._random_move(entity, map, entities)
+            Movement._random_move(entity, entities, map)
 
     @classmethod
-    def _define_target(self, entity, entities, map):
-        if not Scavenger._find_food(entity, entities, map):
+    def _define_target(self, entity, entities):
+        if not Scavenger._find_food(entity, entities):
             entity['target_id'] = "nope"
 
     @classmethod
-    def _find_food(self, entity, entities, map):
+    def _find_food(self, entity, entities):
         """Найти ближайшую еду для животного"""
         pos = entity['Position']
-        animal = entity['Animal']
 
         distanses_to_food_units = []
 
@@ -77,7 +75,6 @@ class Scavenger:
         
         target_data = min(distanses_to_food_units, key=lambda x: x[2])
         entity['target_id'] = target_data[0]
-        Scavenger.targets[entity['target_id']] = target_data[1]
         return True
 
     @staticmethod

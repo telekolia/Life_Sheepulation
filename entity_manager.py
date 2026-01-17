@@ -3,19 +3,9 @@ from systems.__init__ import *
 from pathlib import Path
 import random
 
-class EntityManager():
-    total_entities_ever_existed = 0
-    entity_types = {}
-    entities = {}
-
-    @classmethod
-    def generate_default_entities(self, map):
-        # EntityManager.batch_spawn(map, "bush", 2)
-        EntityManager.batch_spawn(map, "sheep", 1)
-        EntityManager.batch_spawn(map, "hyena", 40)
-
-    @classmethod
-    def load_directory(self, directory_path, recursive = True):
+class EntityLoader:
+    @staticmethod
+    def load_directory(entity_types, directory_path, recursive = True):
         path = Path(directory_path)
 
         if recursive:
@@ -28,43 +18,13 @@ class EntityManager():
             try:
                 with open(str(file_path), 'r', encoding='utf-8') as f:
                     entity_data = json.load(f)
-                    EntityManager.entity_types[entity_name] = EntityManager._execute_entity_from_json(entity_data)
+                    entity_types[entity_name] = EntityLoader._execute_entity_from_json(entity_data)
                     print(f"Loaded entity: {entity_name}")
 
             except Exception as e:
                 print(f"[Х] Load falue {entity_name}: {e}")
 
-        print(f"Total entities loaded: {len(EntityManager.entity_types)}")
-    
-    @classmethod
-    def update(self, map):
-        HealthSystem.update(EntityManager.entities)
-        HungerSystem.update(EntityManager.entities)
-        AnimalSystem.update(EntityManager.entities, map)
-        GrowthSystem.update(EntityManager.entities)
-        EntityManager._delete_destroed_entities()
-
-    @staticmethod
-    def is_entity_deleted(entity):
-        return entity['id'] == 0
-    
-    @staticmethod
-    def delete_this_entity(entity):
-        entity['id'] = 0
-
-    @classmethod
-    def _delete_destroed_entities(self):
-        destroed_entity_ids = []
-        for id, entity in EntityManager.entities.items():
-            if entity['id'] == 0:
-                destroed_entity_ids.append(id)
-
-        for id in destroed_entity_ids:
-            del EntityManager.entities[id]
-
-    @classmethod
-    def draw(self, window):
-        RenderSystem.draw(window, EntityManager.entities)
+        print(f"Total entities loaded: {len(entity_types)}")
 
     @staticmethod
     def _execute_entity_from_json(entity_data):
@@ -91,24 +51,68 @@ class EntityManager():
             entity['Hunger'] = Hunger.from_dict(entity_data['Hunger'])
         if "Animal" in entity_data:
             entity['Animal'] = Animal.from_dict(entity_data['Animal'])
+        if "Tile" in entity_data:
+            entity['Tile'] = Tile.from_dict(entity_data['Tile'])
 
         return entity
 
-    @classmethod
-    def batch_spawn(self, map, entity_name, count):
+class EntityManager():
+    def __init__(self):
+        self.total_entities_ever_existed = 0
+        self.entity_types = {}
+        self.entities = {}
+        self.map = None
+
+    def set_map(self, map):
+        self.map = map
+
+    def generate_default_entities(self):
+        self.batch_spawn("hyena", 2)
+        self.batch_spawn("sheep", 3)
+        self.batch_spawn("bush", 10)
+
+    def update(self):
+        HealthSystem.update(self.entities)
+        HungerSystem.update(self.entities)
+        AnimalSystem.update(self.entities, self.map)
+        GrowthSystem.update(self.entities)
+        
+        self._delete_destroed_entities()
+
+    @staticmethod
+    def is_entity_deleted(entity):
+        return entity['id'] == 0
+
+    @staticmethod
+    def delete_this_entity(entity):
+        entity['id'] = 0
+
+    def _delete_destroed_entities(self):
+        destroed_entity_ids = []
+        for id, entity in self.entities.items():
+            if entity['id'] == 0:
+                destroed_entity_ids.append(id)
+
+        for id in destroed_entity_ids:
+            del self.entities[id]
+
+    def draw(self, window):
+        RenderSystem.draw(window, self.entities)
+
+    def batch_spawn(self, entity_name, count):
         generated = 0
-        map_size = len(map)
+        map_size = len(self.map)
 
         while generated < count:
             x = random.randint(0, map_size - 1)
             y = random.randint(0, map_size - 1)
 
-            tile = map[x][y]
-            if tile.type == "g":  # Только на траве
+            tile = self.map[x][y]
+            if tile["Tile"].is_passable:  # Только на траве
                 # Проверяем, нет ли уже сущности в этой клетке
                 occupied = False
 
-                for entity in EntityManager.entities.values():
+                for entity in self.entities.values():
                     if ('Position' in entity and
                         entity['Position'].x == x and
                         entity['Position'].y == y and
@@ -120,24 +124,21 @@ class EntityManager():
                     self.spawn_entity(entity_name, x, y)
                     generated += 1
 
-    @classmethod
     def spawn_entity(self, entity_name, x, y):
         entity = (self.create_entity(entity_name, x, y)).copy()
 
-        type = entity['type']
-        EntityManager.total_entities_ever_existed += 1
-        entity['id'] = EntityManager.total_entities_ever_existed
+        self.total_entities_ever_existed += 1
+        entity['id'] = self.total_entities_ever_existed
 
-        EntityManager.entities[entity['id']] = entity
+        self.entities[entity['id']] = entity
         print(f"Entity {entity['id']} spawned in position ({entity['Position'].x}, {entity['Position'].y})")
 
-    @classmethod
     def create_entity(self, entity_name, x = 0, y = 0):
-        if entity_name not in EntityManager.entity_types:
+        if entity_name not in self.entity_types:
             raise ValueError(f"Entity '{entity_name}' not found")
 
-        template = EntityManager.entity_types[entity_name]
-        new_entity = EntityManager._create_entity_from_template(template, x, y)
+        template = self.entity_types[entity_name]
+        new_entity = self._create_entity_from_template(template, x, y)
 
         return new_entity
 
@@ -166,5 +167,8 @@ class EntityManager():
 
         if 'Animal' in template:
             entity['Animal'] = Animal.clone(template['Animal'])
+
+        if 'Tile' in template:
+            entity['Tile'] = Tile.clone(template['Tile'])
 
         return entity

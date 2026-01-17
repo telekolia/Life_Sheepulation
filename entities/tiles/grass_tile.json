@@ -1,0 +1,14 @@
+{
+  "id": "none",
+  "type": "grass_tile",
+  "Position": {"x": 0, "y": 0},
+  "Renderable": {
+    "texture_name": "grass",
+    "layer": 0
+  },
+  "Tile": {
+    "type": "grass",
+    "is_passable": true,
+    "fertility": 1.0
+  }
+}

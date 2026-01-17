@@ -1,0 +1,14 @@
+{
+  "id": "none",
+  "type": "water_tile",
+  "Position": {"x": 0, "y": 0},
+  "Renderable": {
+    "texture_name": "water",
+    "layer": 0
+  },
+  "Tile": {
+    "type": "water",
+    "is_passable": false,
+    "fertility": 0
+  }
+}

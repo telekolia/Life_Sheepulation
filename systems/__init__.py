@@ -4,10 +4,12 @@ from systems.health import HealthSystem, Health
 from systems.hunger import HungerSystem, Hunger
 from systems.animal import AnimalSystem, Animal
 from systems.position import Position
+from systems.tile import Tile
 
 __all__ = ['Position',
            'RenderSystem', 'Renderable',
            'GrowthSystem', 'Plant',
            'HealthSystem', 'Health',
            'HungerSystem', 'Hunger',
-           'AnimalSystem', 'Animal']
+           'AnimalSystem', 'Animal',
+           'Tile']
