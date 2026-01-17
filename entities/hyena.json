@@ -19,8 +19,15 @@
     "Animal": {
         "type": "scavenger",
         "max_amount_of_children": 1,
-                        "adult_texture_name": "hyena",
-                        "baby_texture_name": "hyena"
+                        "adult_name": "hyena",
+                        "baby_name": "baby_hyena",
+                        "adult_age": 5,
+                        "death_age": 30
+    },
+    "Age": {
+        "year": 5,
+        "day": 0,
+        "time": 0
     },
     "state": "chill",
     "target_id": "nope"

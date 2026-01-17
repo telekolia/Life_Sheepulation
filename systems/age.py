@@ -2,7 +2,7 @@ from systems.component_class import Component
 
 class Age(Component):
     day_latensy = 2 # in tics
-    days_in_year = 365
+    days_in_year = 2
 
     def __init__(self, time, day, year):
         self.time = time

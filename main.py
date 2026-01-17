@@ -8,16 +8,11 @@ from entity_manager import EntityManager, EntityLoader, EntityCreator
 # from pathlib import Path
 # TO DO: реализовать конфиг для быстрого и удобного создания карты и кол-ва и типов мобов для спавна
 #        или же... реализовать спавн кликом мышки, как и изменение карты
-entity_manager = EntityManager()
 TextureManager.load_directory('res')
 EntityLoader.load_directory(EntityCreator.entity_types, "entities")
 
-world = World(entity_manager)
-world.cout()
-map_size = len(world.map)
-
-entity_manager.set_map(world.map)
-entity_manager.generate_default_entities()
+entity_manager = EntityManager()
+map_size = entity_manager.map_size
 
 hud = HUD(64)
 show_stats = False
@@ -32,7 +27,7 @@ pygame.display.set_icon(TextureManager.get("sheep"))
 
 clock = pygame.time.Clock()
 turn_timer = 0
-turn_delay = 0.1  # секунд между ходами
+turn_delay = 0.2  # секунд между ходами
 
 running = True
 while running:

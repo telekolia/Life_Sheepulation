@@ -54,13 +54,21 @@ class HUD():
             surface.blit(state_text, (text_x, text_y))
 
     # Отображаем target_id слева от овцы
-        if 'target_id' in entity and entity['target_id'] is not None:
+        if 'target_id' in entity:
             target_font = pygame.font.Font(None, 14)
             target_text = target_font.render(f"target: {entity['target_id']}", True, (180, 220, 255))
             # Позиция слева от овцы
             target_x = x + (self.tile_size - target_text.get_width()) / 2
             target_y = y + 4
             surface.blit(target_text, (target_x, target_y))
+        
+        if 'Age' in entity:
+            age_font = pygame.font.Font(None, 18)
+            age_text = age_font.render(f"Age: Y:{entity['Age'].year} D:{entity['Age'].day}, T:{entity['Age'].time}", True, (180, 220, 255))
+            # Позиция слева от овцы
+            age_x = x + (self.tile_size - age_text.get_width()) / 2
+            age_y = y + 60
+            surface.blit(age_text, (age_x, age_y))
 
         # Рисуем здоровье
         if 'Health' in entity:

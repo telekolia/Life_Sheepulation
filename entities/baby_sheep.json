@@ -19,9 +19,16 @@
     "Animal": {
         "type": "herbivore",
         "max_amount_of_children": 1,
-                        "adult_texture_name": "sheep",
-                        "baby_texture_name": "baby_sheep"
-                        },
+                        "adult_name": "sheep",
+                        "baby_name": "baby_sheep",
+                        "adult_age": 5,
+                        "death_age": 30
+    },
+    "Age": {
+        "year": 0,
+        "day": 0,
+        "time": 0
+    },
     "state": "chill",
     "target_id": "nope"
 }

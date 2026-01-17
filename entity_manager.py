@@ -82,25 +82,83 @@ class EntityCreator:
             entity['Position'].y = y
 
         return entity
+    
+    @staticmethod
+    def morth_target_to(morthing_target, entity_name):
+        template = EntityCreator.entity_types[entity_name]
+
+        morthing_target['type'] = template['type']
+
+        conserved_components = ['Age', 'Health', 'Hunger', 'Position']
+
+        for component_name, component in components.items():
+            if component_name in template and (component_name not in conserved_components or component_name not in morthing_target):
+                morthing_target[component_name] = component.clone(template[component_name])
+        
+        if 'Health' in template and 'Health' in morthing_target:
+                morthing_target['Health'].death_texture_name = template['Health'].death_texture_name
+
+        # for component_name in morthing_target.keys():
+        #     if component_name not in template:
+        #         del morthing_target[component_name]
 
 class EntityManager:
     def __init__(self):
         self.total_entities_ever_existed = 0
         self.entities = {}
-        self.map = None
+        self.map_size = 15
+        self.map = [[None for _ in range(self.map_size)] for _ in range(self.map_size)]
+        self.generate_default_map()
 
-    def set_map(self, map):
-        self.map = map
+        self.generate_default_entities()
+
+        self.init_systems()
+        
+        print(f"Мир с {len(self.entities)} сушествами")
+
+    def generate_default_map(self):
+        water_positions = []
+
+        for x in range(5, 7):
+            for y in range(7, 9):
+                water_positions.append((x, y))
+        for i in range(1, 9):
+            water_positions.append((1, i))
+            water_positions.append((i, 1))
+
+        for x in range(self.map_size):
+            for y in range(self.map_size):
+                if (x, y) in water_positions:
+                    self.spawn("water_tile", x, y)
+                else:
+                    self.spawn("grass_tile", x, y)
+
+        for entity in self.entities.values():
+            if "Tile" in entity and "Position" in entity:
+                pos = entity["Position"]
+                self.map[pos.x][pos.y] = entity
+                # print(f"получилось {pos.x},{pos.y}")
+                
+    def cout(self):
+        print("world map:")
+        for y in range(len(self.map)):
+            for x in range(len(self.map)):
+                print(self.map[x][y]["id"], end=" ")
+            print()
 
     def generate_default_entities(self):
-        self.batch_spawn("hyena", 2)
-        self.batch_spawn("sheep", 3)
-        self.batch_spawn("bush", 10)
+        # self.batch_spawn("hyena", 2)
+        # self.batch_spawn("sheep", 2)
+        self.batch_spawn("bush", 4)
+        self.batch_spawn("baby_sheep", 2)
+
+    def init_systems(self):
+        self.animal_system = AnimalSystem(self.entities, self.map, EntityCreator())
 
     def update(self):
         HealthSystem.update(self.entities)
         HungerSystem.update(self.entities)
-        AnimalSystem.update(self.entities, self.map)
+        self.animal_system.update()
         GrowthSystem.update(self.entities)
         AgeSystem.update(self.entities)
         
