@@ -1,9 +1,9 @@
 from systems.component_class import Component
-from systems.behaviors.herbiovore import Herbiovore
-from systems.behaviors.scavenger import Scavenger
+from systems.behaviors.__init__ import *
 
-import random
-from math import sqrt
+animal_behaviors = {'herbivore': Herbiovore,
+                    'scavenger': Scavenger
+                    }
 
 class Animal(Component):
     def __init__(self, type, max_amount_of_children, adult_texture_name, baby_texture_name, is_ready_to_reproduce=False):
@@ -19,12 +19,8 @@ class AnimalSystem():
     @staticmethod
     def update(entities, map):
         for entity in entities.values():
-            if 'Animal' in entity and 'Hunger' in entity and 'Health' in entity:
-                if entity['Health'].is_alive:
-                    animal = entity['Animal']
-                    if animal.type == "herbivore":
-                        Herbiovore.update(entity, entities, map)
-                    elif animal.type == "scavenger":
-                        Scavenger.update(entity, entities, map)
-                # elif animal.type == "predator":
-                #   Predator._update(entity, entities, map)
+            if 'Animal' in entity and 'Hunger' in entity and 'Health' in entity and entity['Health'].is_alive:
+                behavior_type = entity['Animal'].type
+                behavior = animal_behaviors.get(behavior_type)
+                if behavior:
+                    behavior.update(entity, entities, map)

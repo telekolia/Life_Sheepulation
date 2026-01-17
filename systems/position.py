@@ -1,6 +1,5 @@
 from systems.component_class import Component
 from math import sqrt
-import random
 
 class Position(Component):
     def __init__(self, x, y):

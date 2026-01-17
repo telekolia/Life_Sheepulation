@@ -43,7 +43,8 @@ class Herbiovore:
         if Position._distance(pos, target_pos) <= 1:
             Herbiovore._eat_food(entity, target_pos, entities)
         else:
-            Movement._move_towards(entity, entities, target_pos, map)
+            if not Movement._move_towards(entity, entities, target_pos, map):
+                Movement._random_move(entity, entities, map)
             
 
     @staticmethod

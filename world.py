@@ -26,9 +26,9 @@ class World():
         for x in range(self.map_size):
             for y in range(self.map_size):
                 if (x, y) in water_positions:
-                    self.entity_manager.spawn_entity("water_tile", x, y)
+                    self.entity_manager.spawn("water_tile", x, y)
                 else:
-                    self.entity_manager.spawn_entity("grass_tile", x, y)
+                    self.entity_manager.spawn("grass_tile", x, y)
 
         for entity in self.entities.values():
             if "Tile" in entity and "Position" in entity:

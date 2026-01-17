@@ -3,6 +3,18 @@ from systems.__init__ import *
 from pathlib import Path
 import random
 
+components = {'Position': Position,
+              'Renderable': Renderable,
+              'Plant': Plant,
+              'Health': Health,
+              'Hunger': Hunger,
+              'Animal': Animal,
+              'Tile': Tile,
+              'Age': Age,
+}
+
+simple_components = ['id', 'type', 'state', 'target_id']
+
 class EntityLoader:
     @staticmethod
     def load_directory(entity_types, directory_path, recursive = True):
@@ -30,36 +42,50 @@ class EntityLoader:
     def _execute_entity_from_json(entity_data):
         entity = {}
         
-        if "id" in entity_data:
-            entity['id'] = entity_data['id']
-        if "type" in entity_data:
-            entity['type'] = entity_data['type']
-        if "target_id" in entity_data:
-            entity['target_id'] = entity_data['target_id']
-        if "state" in entity_data:
-            entity['state'] = entity_data['state']
+        for simple_component in simple_components:
+            if simple_component in entity_data:
+                entity[simple_component] = entity_data[simple_component]
         
-        if "Position" in entity_data:
-            entity['Position'] = Position.from_dict(entity_data['Position'])
-        if "Renderable" in entity_data:
-            entity['Renderable'] = Renderable.from_dict(entity_data['Renderable'])
-        if "Health" in entity_data:
-            entity['Health'] = Health.from_dict(entity_data['Health'])
-        if "Plant" in entity_data:
-            entity['Plant'] = Plant.from_dict(entity_data['Plant'])
-        if "Hunger" in entity_data:
-            entity['Hunger'] = Hunger.from_dict(entity_data['Hunger'])
-        if "Animal" in entity_data:
-            entity['Animal'] = Animal.from_dict(entity_data['Animal'])
-        if "Tile" in entity_data:
-            entity['Tile'] = Tile.from_dict(entity_data['Tile'])
+        for component_name, component in components.items():
+            if component_name in entity_data:
+                entity[component_name] = component.from_dict(entity_data[component_name])
 
         return entity
 
-class EntityManager():
+class EntityCreator:
+    entity_types = {}
+
+    @classmethod
+    def create_entity(cls, entity_name, x = 0, y = 0):
+        if entity_name not in EntityCreator.entity_types:
+            raise ValueError(f"Entity '{entity_name}' not found")
+
+        template = EntityCreator.entity_types[entity_name]
+        new_entity = EntityCreator._create_entity_from_template(template, x, y)
+
+        return new_entity
+
+    @staticmethod
+    def _create_entity_from_template(template, x, y):
+        entity = {}
+
+        for simple_component in simple_components:
+            if simple_component in template:
+                entity[simple_component] = template[simple_component]
+        
+        for component_name, component in components.items():
+            if component_name in template:
+                entity[component_name] = component.clone(template[component_name])
+
+        if 'Position' in entity:
+            entity['Position'].x = x
+            entity['Position'].y = y
+
+        return entity
+
+class EntityManager:
     def __init__(self):
         self.total_entities_ever_existed = 0
-        self.entity_types = {}
         self.entities = {}
         self.map = None
 
@@ -76,6 +102,7 @@ class EntityManager():
         HungerSystem.update(self.entities)
         AnimalSystem.update(self.entities, self.map)
         GrowthSystem.update(self.entities)
+        AgeSystem.update(self.entities)
         
         self._delete_destroed_entities()
 
@@ -121,54 +148,16 @@ class EntityManager():
                         break
 
                 if not occupied:
-                    self.spawn_entity(entity_name, x, y)
+                    self.spawn(entity_name, x, y)
                     generated += 1
 
-    def spawn_entity(self, entity_name, x, y):
-        entity = (self.create_entity(entity_name, x, y)).copy()
+    def spawn(self, entity_name, x, y):
+        entity = (EntityCreator.create_entity(entity_name, x, y)).copy()
+        self.add(entity)
 
+    def add(self, entity):
         self.total_entities_ever_existed += 1
         entity['id'] = self.total_entities_ever_existed
 
         self.entities[entity['id']] = entity
         print(f"Entity {entity['id']} spawned in position ({entity['Position'].x}, {entity['Position'].y})")
-
-    def create_entity(self, entity_name, x = 0, y = 0):
-        if entity_name not in self.entity_types:
-            raise ValueError(f"Entity '{entity_name}' not found")
-
-        template = self.entity_types[entity_name]
-        new_entity = self._create_entity_from_template(template, x, y)
-
-        return new_entity
-
-    @staticmethod
-    def _create_entity_from_template(template, x, y):
-        entity = {}
-
-        for key, value in template.items():
-            if key in ['id', 'type', 'state', 'target_id']:
-                entity[key] = value
-
-        if 'Position' in template:
-            entity['Position'] = Position(x, y)
-
-        if 'Renderable' in template:
-            entity['Renderable'] = Renderable.clone(template['Renderable'])
-
-        if 'Health' in template:
-            entity['Health'] = Health.clone(template['Health'])
-
-        if 'Hunger' in template:
-            entity['Hunger'] = Hunger.clone(template['Hunger'])
-
-        if 'Plant' in template:
-            entity['Plant'] = Plant.clone(template['Plant'])
-
-        if 'Animal' in template:
-            entity['Animal'] = Animal.clone(template['Animal'])
-
-        if 'Tile' in template:
-            entity['Tile'] = Tile.clone(template['Tile'])
-
-        return entity

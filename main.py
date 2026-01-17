@@ -2,7 +2,7 @@ import pygame
 from world import World
 from textures import TextureManager
 from interface.hud import HUD
-from entity_manager import EntityManager, EntityLoader
+from entity_manager import EntityManager, EntityLoader, EntityCreator
 
 # import json
 # from pathlib import Path
@@ -10,7 +10,7 @@ from entity_manager import EntityManager, EntityLoader
 #        или же... реализовать спавн кликом мышки, как и изменение карты
 entity_manager = EntityManager()
 TextureManager.load_directory('res')
-EntityLoader.load_directory(entity_manager.entity_types, "entities")
+EntityLoader.load_directory(EntityCreator.entity_types, "entities")
 
 world = World(entity_manager)
 world.cout()

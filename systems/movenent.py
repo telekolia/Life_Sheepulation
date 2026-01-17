@@ -50,6 +50,9 @@ class Movement:
             if 'Hunger' in entity:
                 entity['Hunger'].current_satiety -= 0.1
 
+            return True
+        return False
+
     @staticmethod
     def _random_move(entity, entities, map):
         """Случайное блуждание"""
