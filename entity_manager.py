@@ -106,13 +106,11 @@ class EntityManager:
     def __init__(self):
         self.total_entities_ever_existed = 0
         self.entities = {}
-        self.map_size = 15
+        self.map_size = 10
         self.map = [[None for _ in range(self.map_size)] for _ in range(self.map_size)]
         self.generate_default_map()
 
         self.generate_default_entities()
-
-        self.init_systems()
         
         print(f"Мир с {len(self.entities)} сушествами")
 
@@ -139,30 +137,12 @@ class EntityManager:
                 self.map[pos.x][pos.y] = entity
                 # print(f"получилось {pos.x},{pos.y}")
                 
-    def cout(self):
-        print("world map:")
-        for y in range(len(self.map)):
-            for x in range(len(self.map)):
-                print(self.map[x][y]["id"], end=" ")
-            print()
 
     def generate_default_entities(self):
-        # self.batch_spawn("hyena", 2)
-        # self.batch_spawn("sheep", 2)
+        self.batch_spawn("hyena", 2)
+        self.batch_spawn("sheep", 2)
         self.batch_spawn("bush", 4)
         self.batch_spawn("baby_sheep", 2)
-
-    def init_systems(self):
-        self.animal_system = AnimalSystem(self.entities, self.map, EntityCreator())
-
-    def update(self):
-        HealthSystem.update(self.entities)
-        HungerSystem.update(self.entities)
-        self.animal_system.update()
-        GrowthSystem.update(self.entities)
-        AgeSystem.update(self.entities)
-        
-        self._delete_destroed_entities()
 
     @staticmethod
     def is_entity_deleted(entity):

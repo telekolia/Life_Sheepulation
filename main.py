@@ -1,8 +1,8 @@
 import pygame
-from world import World
 from textures import TextureManager
 from interface.hud import HUD
 from entity_manager import EntityManager, EntityLoader, EntityCreator
+from simulation import Simulation
 
 # import json
 # from pathlib import Path
@@ -29,10 +29,10 @@ clock = pygame.time.Clock()
 turn_timer = 0
 turn_delay = 0.2  # секунд между ходами
 
+simulation = Simulation(entity_manager, EntityCreator(), clock, turn_delay)
+
 running = True
 while running:
-    dt = clock.tick(60) / 1000.0
-
     # Handle input
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,12 +52,7 @@ while running:
                 show_hud = not show_hud
                 print("HUD " + ("вкл" if show_hud else "выкл"))
 
-    # Update
-    turn_timer += dt
-    if turn_timer >= turn_delay:
-        entity_manager.update()
-        # print(f"Update {turn_timer}")
-        turn_timer = 0
+    simulation.update()
 
     # Render
     entity_manager.draw(window)

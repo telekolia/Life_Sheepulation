@@ -40,8 +40,8 @@ class AnimalSystem():
                 self.become_adult(entity)
             
             if age.year >= animal.death_age:
-                entity['Health'].current_hp = -1
-                print("Умирает")
+                entity['Health'].current_hp -= min(entity['Health'].current_hp, 0.5)
+                # print("Умирает")
 
     def become_adult(self, entity):
         animal = entity['Animal']

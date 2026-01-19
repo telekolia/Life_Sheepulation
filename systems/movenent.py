@@ -1,4 +1,4 @@
-import random
+from random import shuffle
 
 class Movement:
     @staticmethod
@@ -58,7 +58,7 @@ class Movement:
         """Случайное блуждание"""
         pos = entity['Position']
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        random.shuffle(directions)
+        shuffle(directions)
 
         for dx, dy in directions:
             (new_x, new_y) = (pos.x + dx, pos.y + dy)

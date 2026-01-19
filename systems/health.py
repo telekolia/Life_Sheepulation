@@ -12,6 +12,6 @@ class HealthSystem():
     def update(entities):
         for entity in entities.values():
             if 'Health' in entity and 'Renderable' in entity:
-                if entity['Health'].current_hp <= 0 and entity['Health'].is_alive:
+                if entity['Health'].current_hp <= 0.0 and entity['Health'].is_alive:
                     entity['Health'].is_alive = False
                     entity['Renderable'].texture_name = entity['Health'].death_texture_name
