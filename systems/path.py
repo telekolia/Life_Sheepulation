@@ -30,10 +30,13 @@ class PathfindingSystem:
         came_from = dict()
         came_from[pos] = None
 
+        found = False
+
         while not frontier.empty():
             current = frontier.get()
 
-            if (current.x, current.y) == (target_pos.x, target_pos.y): 
+            if (current.x, current.y) == (target_pos.x, target_pos.y):
+                found = True 
                 break           
 
             for next in self.get_neighbors(current):
@@ -41,11 +44,15 @@ class PathfindingSystem:
                     frontier.put(next)
                     came_from[next] = current
 
-        current = target_pos 
-        path = entity['PathComp'].path
-        while current != pos: 
-            path.append(current)
-            current = came_from[current]
+        if found:
+            current = target_pos 
+            path = entity['PathComp'].path
+            while current != pos: 
+                path.append(current)
+                current = came_from[current]
+        else:
+            entity['PathComp'].target_id = None
+            entity['PathComp'].path.clear()
 
         # step = target_pos
         # entity['PathComp'].path.append(step)
