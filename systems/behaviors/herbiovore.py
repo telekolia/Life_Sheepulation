@@ -42,9 +42,6 @@ class Herbiovore:
 
         if Position._distance(pos, target_pos) <= 1:
             Herbiovore._eat_food(entity, target_pos, entities)
-        else:
-            if not Movement._move_towards(entity, entities, target_pos, map):
-                Movement._random_move(entity, entities, map)
             
 
     @staticmethod
@@ -56,6 +53,7 @@ class Herbiovore:
     def _define_target(self, entity, entities):
         if not Herbiovore._find_food(entity, entities):
             entity['target_id'] = "nope"
+            entity['Path'].target_id = None
 
     @classmethod
     def _find_food(self, entity, entities):
@@ -76,6 +74,7 @@ class Herbiovore:
         
         target_data = min(distanses_to_food_units, key=lambda x: x[2])
         entity['target_id'] = target_data[0]
+        entity['Path'].target_id = target_data[0]
         return True
 
     @staticmethod

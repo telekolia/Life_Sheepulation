@@ -6,6 +6,7 @@ from systems.animal import AnimalSystem, Animal
 from systems.position import Position
 from systems.tile import Tile
 from systems.age import Age, AgeSystem
+from systems.path import Path, PathfindingSystem
 
 __all__ = ['Position',
            'RenderSystem', 'Renderable',
@@ -14,5 +15,6 @@ __all__ = ['Position',
            'HungerSystem', 'Hunger',
            'AnimalSystem', 'Animal',
            'Tile',
-           'Age', 'AgeSystem'
+           'Age', 'AgeSystem',
+           'Path', 'PathfindingSystem',
            ]

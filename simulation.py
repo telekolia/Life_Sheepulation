@@ -36,5 +36,6 @@ class Simulation:
                         HungerSystem(self.D),
                         AnimalSystem(self.D),
                         GrowthSystem(self.D),
-                        AgeSystem(self.D)
+                        AgeSystem(self.D),
+                        PathfindingSystem(self.D)
                         ]
