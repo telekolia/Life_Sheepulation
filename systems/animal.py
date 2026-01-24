@@ -1,7 +1,7 @@
 from systems.component_class import Component
 from systems.behaviors.__init__ import *
 from random import shuffle
-from systems.movenent import Movement
+from systems.movenent import MovementUtils
 
 animal_behaviors = {'herbivore': Herbiovore,
                     'scavenger': Scavenger
@@ -21,13 +21,13 @@ class AnimalSystem():
     def __init__(self, D):
         self.D = D
 
-    def update(self):
+    def proccess(self):
         for entity in self.D.entities.values():
             if 'Animal' in entity and 'Hunger' in entity and 'Health' in entity and entity['Health'].is_alive:
                 behavior_type = entity['Animal'].type
                 behavior = animal_behaviors.get(behavior_type)
                 if behavior:
-                    behavior.update(entity, self.D.entities, self.D.map)
+                    behavior.update(entity, self.D.entities)
 
                 self.proccess_age(entity)
 
@@ -58,7 +58,7 @@ class AnimalSystem():
 
         for dx, dy in directions:
 
-            if Movement._can_move_to(pos.x + dx, pos.y + dy, self.D.entities, self.D.map):
+            if MovementUtils._can_move_to(pos.x + dx, pos.y + dy, self.D.entities, self.D.map):
                 (x, y) = (pos.x + dx, pos.y + dy)
 
                 child_name = entity['Animal'].baby_name

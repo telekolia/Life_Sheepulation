@@ -1,14 +1,14 @@
 from systems.position import Position
-from systems.movenent import Movement
+from systems.movenent import MovementUtils
 import random
 # from entity_manager import EntityManager
 
 class Scavenger:
     @staticmethod
-    def update(entity, entities, map):
+    def update(entity, entities):
         Scavenger._update_state(entity)
 
-        Scavenger._run_state(entity, entities, map)
+        Scavenger._run_state(entity, entities)
 
     @staticmethod
     def _update_state(entity):
@@ -21,21 +21,26 @@ class Scavenger:
 
 
     @staticmethod
-    def _run_state(entity, entities, map):
+    def _run_state(entity, entities):
         state = entity['state']
 
         if state == "hungry":
-            Scavenger._run_hungry_behavior(entity, entities, map)
+            Scavenger._run_hungry_behavior(entity, entities)
         elif state == "chill":
-            Scavenger._run_chill_behavior(entity, entities, map)
+            Scavenger._run_chill_behavior(entity)
 
     @classmethod
-    def _run_hungry_behavior(self, entity, entities, map):
+    def _run_hungry_behavior(self, entity, entities):
         pos = entity['Position']
 
         Scavenger._define_target(entity, entities)
         if entity['target_id'] == "nope":
-            Scavenger._run_chill_behavior(entity, entities, map)
+            Scavenger._run_chill_behavior(entity)
+            return
+
+        Scavenger._define_target(entity, entities)
+        if entity['target_id'] == "nope":
+            Scavenger._run_chill_behavior(entity)
             return
         
         target = entities[entity['target_id']]
@@ -43,15 +48,18 @@ class Scavenger:
 
         if Position._distance(pos, target_pos) <= 1:
             Scavenger._eat_food(entity, target_pos, entities)
+            entity['PathComp'].target_id = None
+            entity['target_id']= "nope"
         else:
-            if not Movement._move_towards(entity, entities, target_pos, map):
-                Movement._random_move(entity, entities, map)
+            entity['PathComp'].state = 'path'
             
 
     @staticmethod
-    def _run_chill_behavior(entity, entities, map):
-        if random.random() < 0.3:
-            Movement._random_move(entity, entities, map)
+    def _run_chill_behavior(entity):
+        if 'MoveComp' in entity and random.random() < 0.3:
+            entity['MoveComp'].state = 'rand_move'
+        else:
+            entity['MoveComp'].state = 'stop'
 
     @classmethod
     def _define_target(self, entity, entities):

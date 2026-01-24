@@ -25,7 +25,7 @@ class Simulation:
         if self.turn_timer >= self.turn_delay:
             
             for system in self.systems:
-                system.update()
+                system.proccess()
             
             self.D.entity_manager._delete_destroed_entities()
             self.D.entity_manager.save_spawn_proccess()
@@ -37,5 +37,6 @@ class Simulation:
                         AnimalSystem(self.D),
                         GrowthSystem(self.D),
                         AgeSystem(self.D),
-                        PathfindingSystem(self.D)
+                        PathfindingSystem(self.D),
+                        MovementSystem(self.D)
                         ]

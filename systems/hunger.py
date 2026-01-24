@@ -9,7 +9,7 @@ class HungerSystem():
     def __init__(self, D):
         self.D = D
 
-    def update(self):
+    def proccess(self):
         for entity in self.D.entities.values():
             if 'Hunger' in entity:
                 hunger = entity['Hunger']

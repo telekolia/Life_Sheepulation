@@ -31,5 +31,10 @@
     },
     "state": "chill",
     "target_id": "nope",
-    "Path": {}
+    "PathComp": {},
+    "MoveComp": {
+        "state": "stop",
+        "speed": 1,
+        "max_pushing_force": 1
+    }
 }

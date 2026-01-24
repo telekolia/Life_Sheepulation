@@ -1,9 +1,9 @@
-from component_class import Component
-from systems.movenent import Movement
+from systems.component_class import Component
+from systems.movenent import MovementUtils
 from systems.position import Position
 from queue import Queue
 
-class Path(Component):
+class PathComp(Component):
     def __init__(self, target_id=None, path=[]):
         self.target_id = target_id
         self.path = path.copy()
@@ -14,13 +14,13 @@ class PathfindingSystem:
 
     def proccess(self):
         for entity in self.D.entities.values():
-            if 'Path' in entity and entity['Path'].target_id != None:
+            if 'PathComp' in entity and entity['PathComp'].target_id != None:
                 self.find_path(entity)
 
     def find_path(self, entity):
-        entity['Path'].path.clear()
+        entity['PathComp'].path.clear()
         pos = entity['Position']
-        target_pos = self.D.entities[entity['Path'].target_id]
+        target_pos = self.D.entities[entity['PathComp'].target_id]
 
         frontier = Queue()
         frontier.put(pos)
@@ -44,7 +44,7 @@ class PathfindingSystem:
         neighbors = []
 
         for dx, dy in directions:
-            if not Movement._can_move_to(pos.x + dx, pos.y + dy, self.D.entities, self.D.map):
+            if not MovementUtils._can_move_to(pos.x + dx, pos.y + dy, self.D.entities, self.D.map):
                 next
             neighbors.append(Position(pos.x + dx, pos.y + dy))
         

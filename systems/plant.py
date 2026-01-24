@@ -14,7 +14,7 @@ class GrowthSystem:
     def __init__(self, D):
         self.D = D
 
-    def update(self):
+    def proccess(self):
         for entity in self.D.entities.values():
             if 'Plant' in entity:
                 id = entity['id']

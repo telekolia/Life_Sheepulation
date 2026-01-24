@@ -24,7 +24,7 @@ class AgeSystem:
     def __init__(self, D):
         self.D = D
 
-    def update(self):
+    def proccess(self):
         for entity in self.D.entities.values():
             if 'Age' in entity and 'Health' in entity and entity['Health'].is_alive:
                 entity['Age'].update()

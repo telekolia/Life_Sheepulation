@@ -11,7 +11,8 @@ components = {'Position': Position,
               'Animal': Animal,
               'Tile': Tile,
               'Age': Age,
-              'Path': Path,
+              'PathComp': PathComp,
+              'MoveComp': MoveComp,
 }
 
 simple_components = ['id', 'type', 'state', 'target_id']

@@ -1,13 +1,13 @@
 from systems.position import Position
-from systems.movenent import Movement
+from systems.movenent import MovementUtils
 import random
 
 class Herbiovore:
     @staticmethod
-    def update(entity, entities, map):
+    def update(entity, entities):
         Herbiovore._update_state(entity)
 
-        Herbiovore._run_state(entity, entities, map)
+        Herbiovore._run_state(entity, entities)
 
     @staticmethod
     def _update_state(entity):
@@ -20,21 +20,21 @@ class Herbiovore:
 
 
     @staticmethod
-    def _run_state(entity, entities, map):
+    def _run_state(entity, entities):
         state = entity['state']
 
         if state == "hungry":
-            Herbiovore._run_hungry_behavior(entity, entities, map)
+            Herbiovore._run_hungry_behavior(entity, entities)
         elif state == "chill":
-            Herbiovore._run_chill_behavior(entity, entities, map)
+            Herbiovore._run_chill_behavior(entity)
 
     @classmethod
-    def _run_hungry_behavior(self, entity, entities, map):
+    def _run_hungry_behavior(self, entity, entities):
         pos = entity['Position']
 
         Herbiovore._define_target(entity, entities)
         if entity['target_id'] == "nope":
-            Herbiovore._run_chill_behavior(entity, entities, map)
+            Herbiovore._run_chill_behavior(entity)
             return
         
         target = entities[entity['target_id']]
@@ -42,18 +42,23 @@ class Herbiovore:
 
         if Position._distance(pos, target_pos) <= 1:
             Herbiovore._eat_food(entity, target_pos, entities)
-            
+            entity['PathComp'].target_id = None
+            entity['target_id']= "nope"
+        else:
+            entity['PathComp'].state = 'path'
 
     @staticmethod
-    def _run_chill_behavior(entity, entities, map):
-        if random.random() < 0.3:
-            Movement._random_move(entity, entities, map)
+    def _run_chill_behavior(entity):
+        if 'MoveComp' in entity and random.random() < 0.3:
+            entity['MoveComp'].state = 'rand_move'
+        else:
+            entity['MoveComp'].state = 'stop'
 
     @classmethod
     def _define_target(self, entity, entities):
         if not Herbiovore._find_food(entity, entities):
             entity['target_id'] = "nope"
-            entity['Path'].target_id = None
+            entity['PathComp'].target_id = None
 
     @classmethod
     def _find_food(self, entity, entities):
@@ -74,7 +79,7 @@ class Herbiovore:
         
         target_data = min(distanses_to_food_units, key=lambda x: x[2])
         entity['target_id'] = target_data[0]
-        entity['Path'].target_id = target_data[0]
+        entity['PathComp'].target_id = target_data[0]
         return True
 
     @staticmethod
