@@ -108,7 +108,7 @@ class MovementSystem:
         if len(path_comp.path) == 0 or path_comp.target_id == None:
             return
 
-        self.try_move_to(entity, path_comp.pop())
+        self.try_move_to(entity, path_comp.path.pop())
 
 
     def random_movement(self, entity):

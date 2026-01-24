@@ -4,9 +4,9 @@ from systems.position import Position
 from queue import Queue
 
 class PathComp(Component):
-    def __init__(self, target_id=None, path=[]):
-        self.target_id = target_id
-        self.path = path.copy()
+    def __init__(self):
+        self.target_id = None
+        self.path = []
 
 class PathfindingSystem:
     def __init__(self, D):
@@ -40,6 +40,20 @@ class PathfindingSystem:
                 if next not in came_from:
                     frontier.put(next)
                     came_from[next] = current
+
+        current = target_pos 
+        path = entity['PathComp'].path
+        while current != pos: 
+            path.append(current)
+            current = came_from[current]
+
+        # step = target_pos
+        # entity['PathComp'].path.append(step)
+        # previous_step = came_from[step]
+        # while previous_step != pos:
+        #     step = previous_step
+        #     entity['PathComp'].path.append(step)
+        #     previous_step = came_from[step]
 
     def get_neighbors(self, pos):
         directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]

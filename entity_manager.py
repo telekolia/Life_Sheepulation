@@ -142,10 +142,10 @@ class EntityManager:
                 
 
     def generate_default_entities(self):
-        self.batch_spawn("hyena", 2)
-        # self.batch_spawn("sheep", 2)
-        self.batch_spawn("bush", 4)
-        self.batch_spawn("baby_sheep", 2)
+        # self.batch_spawn("hyena", 2)
+        self.batch_spawn("sheep", 1)
+        self.batch_spawn("bush", 1)
+        # self.batch_spawn("baby_sheep", 2)
 
     @staticmethod
     def is_entity_deleted(entity):
