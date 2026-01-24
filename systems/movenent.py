@@ -82,7 +82,7 @@ class MovementUtils:
 class MoveComp(Component):
     def __init__(self, state='stop', speed=1, max_pushing_force=1):
         self.state = state
-        self.speed = speed,
+        self.speed = speed
         self.max_pushing_force = max_pushing_force
 
 class MovementSystem:
@@ -92,7 +92,10 @@ class MovementSystem:
     def proccess(self):
         for entity in self.D.entities.values():
             if 'MoveComp' not in entity or entity['MoveComp'].state == 'stop':
-                return
+                continue
+            
+            if 'Health' in entity and not entity['Health'].is_alive:
+                continue
             
             move_comp = entity['MoveComp']
             if move_comp.state == 'path' and 'PathComp' in entity:
@@ -137,6 +140,9 @@ class MovementSystem:
             if 'Position' in other and 'Tile' not in other:
                 if (other['Position'].x == target_pos.x and other['Position'].y == target_pos.y):
                     return self.try_shtorm_to(entity, other)
+                
+        pos = entity['Position']
+        (pos.x, pos.y) = (target_pos.x, target_pos.y)
         return True
 
     def try_shtorm_to(self, entity, other):

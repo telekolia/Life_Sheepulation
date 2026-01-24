@@ -65,7 +65,7 @@ class Scavenger:
     def _define_target(self, entity, entities):
         if not Scavenger._find_food(entity, entities):
             entity['target_id'] = "nope"
-            entity['Path'].target_id = None
+            entity['PathComp'].target_id = None
 
     @classmethod
     def _find_food(self, entity, entities):
@@ -85,7 +85,7 @@ class Scavenger:
         
         target_data = min(distanses_to_food_units, key=lambda x: x[2])
         entity['target_id'] = target_data[0]
-        entity['Path'].target_id = target_data[0]
+        entity['PathComp'].target_id = target_data[0]
         return True
 
     @staticmethod

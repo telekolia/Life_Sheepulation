@@ -15,13 +15,16 @@ class PathfindingSystem:
     def proccess(self):
         for entity in self.D.entities.values():
             if 'PathComp' in entity and entity['PathComp'].target_id != None:
+                if 'Health' in entity and not entity['Health'].is_alive:
+                    continue
+
                 self.find_path(entity)
 
     def find_path(self, entity):
         entity['PathComp'].path.clear()
         pos = entity['Position']
-        target_pos = self.D.entities[entity['PathComp'].target_id]
-
+        target = self.D.entities[entity['PathComp'].target_id]
+        target_pos = target['Position']
         frontier = Queue()
         frontier.put(pos)
         came_from = dict()
@@ -45,7 +48,7 @@ class PathfindingSystem:
 
         for dx, dy in directions:
             if not MovementUtils._can_move_to(pos.x + dx, pos.y + dy, self.D.entities, self.D.map):
-                next
+                continue
             neighbors.append(Position(pos.x + dx, pos.y + dy))
         
         return neighbors   
