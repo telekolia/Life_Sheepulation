@@ -8,9 +8,11 @@ class Health(Component):
         self.death_texture_name = death_texture_name
 
 class HealthSystem():
-    @staticmethod
-    def update(entities):
-        for entity in entities.values():
+    def __init__(self, D):
+        self.D = D
+
+    def update(self):
+        for entity in self.D.entities.values():
             if 'Health' in entity and 'Renderable' in entity:
                 if entity['Health'].current_hp <= 0.0 and entity['Health'].is_alive:
                     entity['Health'].is_alive = False

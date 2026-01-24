@@ -11,9 +11,11 @@ class Plant(Component):
 
 
 class GrowthSystem:
-    @staticmethod
-    def update(entities):
-        for entity in entities.values():
+    def __init__(self, D):
+        self.D = D
+
+    def update(self):
+        for entity in self.D.entities.values():
             if 'Plant' in entity:
                 id = entity['id']
                 renderable = entity['Renderable']

@@ -66,7 +66,7 @@ class EntityCreator:
         return new_entity
 
     @staticmethod
-    def _create_entity_from_template(template, x, y):
+    def _create_entity_from_template(template, x=0, y=0):
         entity = {}
 
         for simple_component in simple_components:
@@ -108,6 +108,7 @@ class EntityManager:
         self.entities = {}
         self.map_size = 10
         self.map = [[None for _ in range(self.map_size)] for _ in range(self.map_size)]
+        self.entities_to_spawn = []
         self.generate_default_map()
 
         self.generate_default_entities()
@@ -127,9 +128,9 @@ class EntityManager:
         for x in range(self.map_size):
             for y in range(self.map_size):
                 if (x, y) in water_positions:
-                    self.spawn("water_tile", x, y)
+                    self.init_spawn("water_tile", x, y)
                 else:
-                    self.spawn("grass_tile", x, y)
+                    self.init_spawn("grass_tile", x, y)
 
         for entity in self.entities.values():
             if "Tile" in entity and "Position" in entity:
@@ -140,7 +141,7 @@ class EntityManager:
 
     def generate_default_entities(self):
         self.batch_spawn("hyena", 2)
-        self.batch_spawn("sheep", 2)
+        # self.batch_spawn("sheep", 2)
         self.batch_spawn("bush", 4)
         self.batch_spawn("baby_sheep", 2)
 
@@ -186,12 +187,23 @@ class EntityManager:
                         break
 
                 if not occupied:
-                    self.spawn(entity_name, x, y)
+                    self.init_spawn(entity_name, x, y)
                     generated += 1
 
-    def spawn(self, entity_name, x, y):
-        entity = (EntityCreator.create_entity(entity_name, x, y)).copy()
+    def init_spawn(self, entity_name, x, y):
+        entity = EntityCreator.create_entity(entity_name, x, y)
         self.add(entity)
+
+    def save_spawn_add(self, entity):
+        new_entity_template = entity
+        self.entities_to_spawn.append(new_entity_template)
+
+    def save_spawn_proccess(self):
+        for entity in self.entities_to_spawn:
+            new_entity = EntityCreator._create_entity_from_template(entity)
+            self.add(entity)
+        
+        self.entities_to_spawn.clear()
 
     def add(self, entity):
         self.total_entities_ever_existed += 1
@@ -199,3 +211,11 @@ class EntityManager:
 
         self.entities[entity['id']] = entity
         print(f"Entity {entity['id']} spawned in position ({entity['Position'].x}, {entity['Position'].y})")
+
+class EntityMailman:
+    def __init__(self, entity_manager, entity_creator):
+        self.entity_manager = entity_manager
+        self.entity_creator = entity_creator
+
+    def add_entity_to_safe_spawn(self):
+        pass

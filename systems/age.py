@@ -21,8 +21,10 @@ class Age(Component):
             self.year += 1
 
 class AgeSystem:
-    @staticmethod
-    def update(entities):
-        for entity in entities.values():
+    def __init__(self, D):
+        self.D = D
+
+    def update(self):
+        for entity in self.D.entities.values():
             if 'Age' in entity and 'Health' in entity and entity['Health'].is_alive:
                 entity['Age'].update()
