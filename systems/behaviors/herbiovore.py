@@ -45,7 +45,8 @@ class Herbiovore:
             entity['PathComp'].target_id = None
             entity['target_id']= "nope"
         else:
-            entity['PathComp'].state = 'path'
+            entity['MoveComp'].state = 'path'
+            # entity['PathComp'].state = 'path'
 
     @staticmethod
     def _run_chill_behavior(entity):

@@ -91,7 +91,11 @@ class MovementSystem:
 
     def proccess(self):
         for entity in self.D.entities.values():
-            if 'MoveComp' not in entity or entity['MoveComp'].state == 'stop':
+            if 'MoveComp' not in entity:
+                continue
+
+            if entity['MoveComp'].state == 'stop':
+                print(f"Entity {entity['id']} stop")
                 continue
             
             if 'Health' in entity and not entity['Health'].is_alive:
@@ -105,14 +109,33 @@ class MovementSystem:
 
     def path_movement(self, entity):
         path_comp = entity['PathComp']
+
+        self.test_inf(entity, path_comp)
+
         if len(path_comp.path) == 0 or path_comp.target_id == None:
+            entity['MoveComp'].state = 'stop'
+            return
+        
+        target = self.D.entities[path_comp.target_id]
+        if target and entity['Position'] == target['Position']:
+            path_comp.target_id = None
+            path_comp.path.clear()
+            entity['MoveComp'].state = 'stop'
             return
 
-        self.try_move_to(entity, path_comp.path.pop())
+        next_step = path_comp.path[0]
+        if self.try_move_to(entity, next_step):
+            path_comp.path.pop(0)
 
+    def test_inf(self, entity, path_comp):
+        print(f"Entity {entity['id']} path length: {len(path_comp.path)}")
+        if path_comp.path:
+            print(f"First step: ({path_comp.path[0].x}, {path_comp.path[0].y})")
+            print(f"Current pos: ({entity['Position'].x}, {entity['Position'].y})")
 
     def random_movement(self, entity):
         """Случайное блуждание"""
+        print(f"Entity {entity['id']} блуждает")
         pos = entity['Position']
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         shuffle(directions)

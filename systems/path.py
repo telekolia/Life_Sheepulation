@@ -35,7 +35,7 @@ class PathfindingSystem:
         while not frontier.empty():
             current = frontier.get()
 
-            if (current.x, current.y) == (target_pos.x, target_pos.y):
+            if current == target_pos:
                 found = True 
                 break           
 
@@ -50,6 +50,7 @@ class PathfindingSystem:
             while current != pos: 
                 path.append(current)
                 current = came_from[current]
+            path.reverse()
         else:
             entity['PathComp'].target_id = None
             entity['PathComp'].path.clear()

@@ -123,9 +123,16 @@ class EntityManager:
         for x in range(5, 7):
             for y in range(7, 9):
                 water_positions.append((x, y))
-        for i in range(1, 9):
+        for i in range(1, 14):
+            if i in [2]:
+                continue
             water_positions.append((1, i))
             water_positions.append((i, 1))
+        for i in range(3, 14):
+            if i in [5, 13]:
+                continue
+            water_positions.append((3, i))
+            water_positions.append((i, 3))
 
         for x in range(self.map_size):
             for y in range(self.map_size):
@@ -142,9 +149,9 @@ class EntityManager:
                 
 
     def generate_default_entities(self):
-        # self.batch_spawn("hyena", 2)
-        self.batch_spawn("sheep", 1)
-        self.batch_spawn("bush", 1)
+        self.batch_spawn("hyena", 1)
+        self.batch_spawn("sheep", 3)
+        self.batch_spawn("bush", 2)
         # self.batch_spawn("baby_sheep", 2)
 
     @staticmethod

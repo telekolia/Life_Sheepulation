@@ -51,7 +51,7 @@ class Scavenger:
             entity['PathComp'].target_id = None
             entity['target_id']= "nope"
         else:
-            entity['PathComp'].state = 'path'
+            entity['MoveComp'].state = 'path'
             
 
     @staticmethod
