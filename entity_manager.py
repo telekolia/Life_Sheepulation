@@ -108,7 +108,7 @@ class EntityManager:
     def __init__(self):
         self.total_entities_ever_existed = 0
         self.entities = {}
-        self.map_size = 10
+        self.map_size = 40
         self.map = [[None for _ in range(self.map_size)] for _ in range(self.map_size)]
         self.entities_to_spawn = []
         self.generate_default_map()
@@ -149,7 +149,7 @@ class EntityManager:
                 
 
     def generate_default_entities(self):
-        self.batch_spawn("hyena", 1)
+        # self.batch_spawn("hyena", 1)
         self.batch_spawn("sheep", 3)
         self.batch_spawn("bush", 2)
         # self.batch_spawn("baby_sheep", 2)
