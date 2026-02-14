@@ -20,7 +20,7 @@ class PathfindingSystem:
 
                 self.find_path(entity)
 
-    def find_path(self, entity):
+    def find_path(self, entity, max_distanse = 10):
         entity['PathComp'].path.clear()
         pos = entity['Position']
         target = self.D.entities[entity['PathComp'].target_id]
@@ -38,6 +38,9 @@ class PathfindingSystem:
             if current == target_pos:
                 found = True 
                 break           
+
+            if Position._distance(pos, current) > max_distanse:
+                continue
 
             for next in self.get_neighbors(current):
                 if next not in came_from:

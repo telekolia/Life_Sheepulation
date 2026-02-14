@@ -24,7 +24,7 @@ hud = HUD(64)
 show_stats = False
 show_hud = False
 
-camera = Camera((0, 0), (1920, 1080), 1.0)
+camera = Camera((-800, 0), (1920, 1080), 0.4)
 
 pygame.init()
 

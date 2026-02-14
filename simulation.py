@@ -34,9 +34,9 @@ class Simulation:
     def init_systems(self):
         self.systems = [HealthSystem(self.D),
                         HungerSystem(self.D),
-                        AnimalSystem(self.D),
+                        AnimalSystem(self.D, PathfindingSystem(self.D)),
                         GrowthSystem(self.D),
                         AgeSystem(self.D),
-                        PathfindingSystem(self.D),
+                        # PathfindingSystem(self.D),
                         MovementSystem(self.D)
                         ]

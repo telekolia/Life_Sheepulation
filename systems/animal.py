@@ -18,16 +18,20 @@ class Animal(Component):
         self.is_ready_to_reproduce = is_ready_to_reproduce
 
 class AnimalSystem():
-    def __init__(self, D):
+    def __init__(self, D, pathfinding_system):
         self.D = D
+        self.pathfinding_system = pathfinding_system
+        self.animal_behaviors = {'herbivore': Herbiovore(D, pathfinding_system),
+                                 'scavenger': Scavenger(D, pathfinding_system)
+                                 }
 
     def proccess(self):
         for entity in self.D.entities.values():
             if 'Animal' in entity and 'Hunger' in entity and 'Health' in entity and entity['Health'].is_alive:
                 behavior_type = entity['Animal'].type
-                behavior = animal_behaviors.get(behavior_type)
+                behavior = self.animal_behaviors.get(behavior_type)
                 if behavior:
-                    behavior.update(entity, self.D.entities)
+                    behavior.update(entity)
 
                 self.proccess_age(entity)
 

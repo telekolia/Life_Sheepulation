@@ -8,7 +8,7 @@ class Camera:
         self.zoom = zoom
         self.min_zoom = 0.1
         self.max_zoom = 5.0
-        self.zoom_speed = 0.1
+        self.zoom_speed = 0.01
         self.move_speed = 5
 
     def process(self, event):

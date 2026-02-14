@@ -4,11 +4,15 @@ import random
 # from entity_manager import EntityManager
 
 class Scavenger:
-    @staticmethod
-    def update(entity, entities):
+    def __init__(self, D, pathfinding_system):
+        self.D = D
+        self.pathfinding_system = pathfinding_system
+        self.max_finding_dis = 8.0
+
+    def update(self, entity):
         Scavenger._update_state(entity)
 
-        Scavenger._run_state(entity, entities)
+        Scavenger._run_state(entity, self.D.entities)
 
     @staticmethod
     def _update_state(entity):
