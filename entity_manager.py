@@ -15,7 +15,7 @@ components = {'Position': Position,
               'MoveComp': MoveComp,
 }
 
-simple_components = ['id', 'type', 'state', 'target_id']
+simple_components = ['id', 'type', 'state']
 
 class EntityLoader:
     @staticmethod
@@ -43,11 +43,11 @@ class EntityLoader:
     @staticmethod
     def _execute_entity_from_json(entity_data):
         entity = {}
-        
+
         for simple_component in simple_components:
             if simple_component in entity_data:
                 entity[simple_component] = entity_data[simple_component]
-        
+
         for component_name, component in components.items():
             if component_name in entity_data:
                 entity[component_name] = component.from_dict(entity_data[component_name])
@@ -74,7 +74,7 @@ class EntityCreator:
         for simple_component in simple_components:
             if simple_component in template:
                 entity[simple_component] = template[simple_component]
-        
+
         for component_name, component in components.items():
             if component_name in template:
                 entity[component_name] = component.clone(template[component_name])
@@ -84,7 +84,7 @@ class EntityCreator:
             entity['Position'].y = y
 
         return entity
-    
+
     @staticmethod
     def morth_target_to(morthing_target, entity_name):
         template = EntityCreator.entity_types[entity_name]
@@ -96,7 +96,7 @@ class EntityCreator:
         for component_name, component in components.items():
             if component_name in template and (component_name not in conserved_components or component_name not in morthing_target):
                 morthing_target[component_name] = component.clone(template[component_name])
-        
+
         if 'Health' in template and 'Health' in morthing_target:
                 morthing_target['Health'].death_texture_name = template['Health'].death_texture_name
 
@@ -114,7 +114,7 @@ class EntityManager:
         self.generate_default_map()
 
         self.generate_default_entities()
-        
+
         print(f"Мир с {len(self.entities)} сушествами")
 
     def generate_default_map(self):
@@ -146,10 +146,10 @@ class EntityManager:
                 pos = entity["Position"]
                 self.map[pos.x][pos.y] = entity
                 # print(f"получилось {pos.x},{pos.y}")
-                
+
 
     def generate_default_entities(self):
-        # self.batch_spawn("hyena", 3)
+        self.batch_spawn("hyena", 3)
         self.batch_spawn("sheep", 15)
         self.batch_spawn("bush", 3)
         self.batch_spawn("baby_sheep", 5)
@@ -211,7 +211,7 @@ class EntityManager:
         for entity in self.entities_to_spawn:
             new_entity = EntityCreator._create_entity_from_template(entity)
             self.add(entity)
-        
+
         self.entities_to_spawn.clear()
 
     def add(self, entity):

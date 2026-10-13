@@ -54,9 +54,9 @@ class HUD():
             surface.blit(state_text, (text_x, text_y))
 
     # Отображаем target_id слева от овцы
-        if 'target_id' in entity:
+        if 'Animal' in entity:
             target_font = pygame.font.Font(None, 14)
-            target_text = target_font.render(f"target: {entity['target_id']}", True, (180, 220, 255))
+            target_text = target_font.render(f"target: {entity['Animal'].target_id}", True, (180, 220, 255))
             # Позиция слева от овцы
             target_x = x + (self.tile_size - target_text.get_width()) / 2
             target_y = y + 4

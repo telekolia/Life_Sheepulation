@@ -112,20 +112,15 @@ class MovementSystem:
 
         self.test_inf(entity, path_comp)
 
-        if len(path_comp.path) == 0 or path_comp.target_id == None:
-            entity['MoveComp'].state = 'stop'
-            return
-        
-        target = self.D.entities[path_comp.target_id]
-        if target and entity['Position'] == target['Position']:
-            path_comp.target_id = None
-            path_comp.path.clear()
+        if len(path_comp.path) == 0:
             entity['MoveComp'].state = 'stop'
             return
 
         next_step = path_comp.path[0]
         if self.try_move_to(entity, next_step):
             path_comp.path.pop(0)
+            if not path_comp.path:
+                entity['MoveComp'].state = 'stop'
 
     def test_inf(self, entity, path_comp):
         print(f"Entity {entity['id']} path length: {len(path_comp.path)}")
@@ -184,4 +179,3 @@ class MovementSystem:
             return True
         
         return False
-        

@@ -1,6 +1,6 @@
 from systems.position import Position
-from systems.movenent import MovementUtils
 import random
+
 
 class Herbiovore:
     def __init__(self, D, pathfinding_system):
@@ -10,93 +10,92 @@ class Herbiovore:
 
     def update(self, entity):
         self._update_state(entity)
-
         self._run_state(entity)
 
-    def _update_state(self, entity):
+    @staticmethod
+    def _update_state(entity):
         hunger = entity['Hunger']
-
         if hunger.current_satiety > hunger.max_satiety * 0.7:
             entity['state'] = "chill"
-        elif hunger.current_satiety <= hunger.max_satiety * 0.7:
+        else:
             entity['state'] = "hungry"
 
-
     def _run_state(self, entity):
-        state = entity['state']
-
-        if state == "hungry":
+        if entity['state'] == "hungry":
             self._run_hungry_behavior(entity)
-        elif state == "chill":
+        elif entity['state'] == "chill":
+            self._clear_target(entity)
             self._run_chill_behavior(entity)
 
     def _run_hungry_behavior(self, entity):
-        pos = entity['Position']
-
         self._define_target(entity)
-        if entity['target_id'] == "nope":
+        target = self.D.entities.get(entity['Animal'].target_id)
+        if not self._is_food(target):
+            self._clear_target(entity)
             self._run_chill_behavior(entity)
             return
-        
-        target = self.D.entities[entity['target_id']]
+
         target_pos = target['Position']
+        if Position._distance(entity['Position'], target_pos) <= 1:
+            self._eat_food(entity, target)
+            self._clear_target(entity)
+            return
 
-        if Position._distance(pos, target_pos) <= 1:
-            self._eat_food(entity, target_pos)
-            entity['PathComp'].target_id = None
-            entity['target_id']= "nope"
-        else:
-            entity['MoveComp'].state = 'path'
-            # entity['PathComp'].state = 'path'
+        path_comp = entity['PathComp']
+        if (not path_comp.path or path_comp.destination is None
+            or Position._distance(path_comp.destination, target_pos) > 1):
+            if not self.pathfinding_system.find_path(
+                entity, target_pos, self.max_finding_dis, arrival_distance=1
+            ):
+                entity['MoveComp'].state = 'stop'
+                return
+        entity['MoveComp'].state = 'path'
 
-    def _run_chill_behavior(self, entity):
-        if 'MoveComp' in entity and random.random() < 0.3:
+    @staticmethod
+    def _clear_target(entity):
+        entity['Animal'].target_id = None
+        entity['PathComp'].clear()
+        entity['MoveComp'].state = 'stop'
+
+    @staticmethod
+    def _run_chill_behavior(entity):
+        if random.random() < 0.3:
             entity['MoveComp'].state = 'rand_move'
         else:
             entity['MoveComp'].state = 'stop'
 
     def _define_target(self, entity):
         if not self._find_food(entity):
-            entity['target_id'] = "nope"
-            entity['PathComp'].target_id = None
+            self._clear_target(entity)
+
+    @staticmethod
+    def _is_food(other):
+        return (other is not None and other['id'] != 0
+                and 'Plant' in other and other['Plant'].is_mature
+                and 'Position' in other)
 
     def _find_food(self, entity):
-        """Найти ближайшую еду для животного"""
         pos = entity['Position']
-        animal = entity['Animal']
-
-        distanses_to_food_units = []
-
+        candidates = []
         for other in self.D.entities.values():
-            if ('Plant' in other and other['Plant'].is_mature and 'Position' in other):
-                food_pos = other['Position']
-                target_id = other['id']
-
-                if Position._distance(pos, food_pos) > self.max_finding_dis:
-                    continue
-
-                distanses_to_food_units.append((target_id, food_pos, Position._distance(pos, food_pos)))
-
-        if len(distanses_to_food_units) == 0:
+            if self._is_food(other):
+                distance = Position._distance(pos, other['Position'])
+                if distance <= self.max_finding_dis:
+                    candidates.append((distance, other['id']))
+        if not candidates:
             return False
-        
-        target_data = min(distanses_to_food_units, key=lambda x: x[2])
-        best_target_id = target_data[0]
-        if best_target_id != entity['PathComp'].target_id:
-            entity['target_id'] = target_data[0]
-            entity['PathComp'].target_id = target_data[0]
-            self.pathfinding_system.find_path(entity, self.max_finding_dis)
 
+        target_id = min(candidates, key=lambda candidate: candidate[0])[1]
+        if target_id != entity['Animal'].target_id:
+            entity['PathComp'].clear()
+        entity['Animal'].target_id = target_id
         return True
 
-    def _eat_food(self, entity, food_pos):
-        for plant in self.D.entities.values():
-            if ('Plant' in plant and 'Position' in plant and plant['Position'].x == food_pos.x and plant['Position'].y == food_pos.y):
-                hunger = entity['Hunger']
-                hunger.current_satiety = min(hunger.max_satiety, hunger.current_satiety + 20)
-                plant['Plant'].is_mature = False
-                plant['Plant'].growth_stage = 0
-                plant['Renderable'].texture_name = plant['Plant'].growth_stage_texture_names[0]
-                entity['target_id'] = "nope"
-                entity['PathComp'].target_id = None
-                break
+    def _eat_food(self, entity, plant):
+        if not self._is_food(plant):
+            return
+        hunger = entity['Hunger']
+        hunger.current_satiety = min(hunger.max_satiety, hunger.current_satiety + 20)
+        plant['Plant'].is_mature = False
+        plant['Plant'].growth_stage = 0
+        plant['Renderable'].texture_name = plant['Plant'].growth_stage_texture_names[0]

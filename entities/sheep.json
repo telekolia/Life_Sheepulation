@@ -30,7 +30,6 @@
         "time": 0
     },
     "state": "chill",
-    "target_id": "nope",
     "PathComp": {},
     "MoveComp": {
         "state": "stop",

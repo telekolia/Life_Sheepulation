@@ -8,7 +8,7 @@ animal_behaviors = {'herbivore': Herbiovore,
                     }
 
 class Animal(Component):
-    def __init__(self, type, max_amount_of_children, adult_name, baby_name, adult_age, death_age, is_ready_to_reproduce=False):
+    def __init__(self, type, max_amount_of_children, adult_name, baby_name, adult_age, death_age, is_ready_to_reproduce=False, target_id=None, is_searching=False):
         self.type = type
         self.max_amount_of_children = max_amount_of_children
         self.adult_name = adult_name
@@ -16,6 +16,8 @@ class Animal(Component):
         self.adult_age = adult_age
         self.death_age = death_age
         self.is_ready_to_reproduce = is_ready_to_reproduce
+        self.target_id = target_id
+        self.is_searching = is_searching
 
 class AnimalSystem():
     def __init__(self, D, pathfinding_system):

@@ -1,0 +1,162 @@
+{
+  "python": "3.13.7",
+  "pygame": "2.6.1",
+  "results": {
+    "python_syntax": [
+      "camera.py",
+      "entity_manager.py",
+      "interface\\hud.py",
+      "main.py",
+      "simulation.py",
+      "systems\\__init__.py",
+      "systems\\age.py",
+      "systems\\animal.py",
+      "systems\\behaviors\\__init__.py",
+      "systems\\behaviors\\herbiovore.py",
+      "systems\\behaviors\\scavenger.py",
+      "systems\\component_class.py",
+      "systems\\health.py",
+      "systems\\hunger.py",
+      "systems\\movenent.py",
+      "systems\\path.py",
+      "systems\\physics.py",
+      "systems\\plant.py",
+      "systems\\position.py",
+      "systems\\render.py",
+      "systems\\tile.py",
+      "textures.py"
+    ],
+    "templates": [
+      "baby_sheep",
+      "bush",
+      "grass_tile",
+      "hyena",
+      "sheep",
+      "water_tile"
+    ],
+    "queued_spawn_position": {
+      "requested": [
+        2,
+        3
+      ],
+      "actual": [
+        2,
+        3
+      ]
+    },
+    "scavenger_eats_living_entity": {
+      "living_eater_id": 0,
+      "satiety": 20
+    },
+    "scavenger_missing_route": {
+      "move_state": "path",
+      "path_length": 0
+    },
+    "corpse_unreachable_for_planner": {
+      "target_after_search": null,
+      "path_length": 0
+    },
+    "deleted_target_lookup": {
+      "exception": "KeyError",
+      "message": "999"
+    },
+    "planner_executor_overlap": {
+      "planner_allows": false,
+      "executor_moves": true,
+      "positions_equal": true
+    },
+    "camera_roundtrip": [
+      -672.0,
+      -408.0
+    ],
+    "hud_stats_dict": {
+      "exception": "AttributeError",
+      "message": "'int' object has no attribute 'get'"
+    },
+    "growth_small_duration": {
+      "exception": "IndexError",
+      "message": "list index out of range"
+    },
+    "death_delayed_one_turn": {
+      "hp": -0.15,
+      "alive_after_turn": true,
+      "age_ticks": 1
+    },
+    "turn_timer_loss": {
+      "elapsed_ms": 550,
+      "turns": 1,
+      "remainder_s": 0
+    },
+    "seeded_world_200_turns": {
+      "turns": 200,
+      "entities": 1668,
+      "alive_animals": 56
+    },
+    "local_performance_sample": {
+      "environment": "SDL dummy, logging redirected, one local run; not real-window FPS",
+      "initial_entities": 1623,
+      "scales_per_draw": 1623,
+      "render_draw_only": {
+        "median_ms": 5.456,
+        "p95_ms": 6.441,
+        "samples": 20
+      },
+      "first_60_turns": {
+        "median_ms": 1.298,
+        "p95_ms": 160.751,
+        "samples": 60
+      },
+      "next_10_turns_profile_top_self_time": [
+        {
+          "function": "systems\\movenent.py:_can_move_to",
+          "calls": 2009,
+          "self_ms": 136.938,
+          "cumulative_ms": 137.437
+        },
+        {
+          "function": "systems\\behaviors\\herbiovore.py:_find_food",
+          "calls": 223,
+          "self_ms": 7.123,
+          "cumulative_ms": 153.278
+        },
+        {
+          "function": "systems\\movenent.py:try_move_to",
+          "calls": 101,
+          "self_ms": 6.92,
+          "cumulative_ms": 6.949
+        },
+        {
+          "function": "systems\\path.py:get_neighbors",
+          "calls": 501,
+          "self_ms": 1.645,
+          "cumulative_ms": 139.126
+        },
+        {
+          "function": "systems\\path.py:find_path",
+          "calls": 5,
+          "self_ms": 1.575,
+          "cumulative_ms": 146.0
+        },
+        {
+          "function": "systems\\animal.py:proccess",
+          "calls": 10,
+          "self_ms": 0.621,
+          "cumulative_ms": 155.296
+        },
+        {
+          "function": "entity_manager.py:_delete_destroed_entities",
+          "calls": 10,
+          "self_ms": 0.569,
+          "cumulative_ms": 0.571
+        },
+        {
+          "function": "systems\\movenent.py:proccess",
+          "calls": 10,
+          "self_ms": 0.541,
+          "cumulative_ms": 8.096
+        }
+      ]
+    },
+    "main_dummy_smoke": "Startup, one draw and QUIT completed with SDL dummy"
+  }
+}
